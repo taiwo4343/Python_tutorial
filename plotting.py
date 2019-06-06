@@ -18,6 +18,7 @@ plt.show() # must do this to show the plot! program will pause here until the
 
 # something a little more complicated...
 with plt.xkcd(): # "with" creates a context for a command. this is just for fun!
+    plt.figure(figsize=(6, 4)) # custom figure size
     plt.subplot(211) # two rows, one column, plot number one
     plt.plot(x_vals, x_vals, label='linear plot') # linear
     plt.plot(x_vals, np.exp(x_vals), label='exp plot') # exponential
