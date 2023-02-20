@@ -84,6 +84,8 @@ print(' ') # add an empty line after the prompt stuff
 A = np.array([[1,2,3],[4,5,6],[7,8,9]]) # 3x3 array of integers
 print('A = ')
 print(A)
+x,y = A.shape
+print('The shape of A is {} by {}.'.format(x,y))
 B = np.random.rand(3,3) # 3x3 array of floating point numbers between 0 and 1
 print('B = ')
 print(B)
