@@ -41,7 +41,7 @@ print(eggs[0:10]) # Will print characters 0-9 in the eggs string (10 characters 
 
 for ii in range(3): # ii will take on values 0, 1, 2.
     # print characters starting at 5 from the end and going all the way to the end
-    print(eggs[-5:])
+    print(eggs[-5+ii:])
 
 # for loops finish when you quit indenting
 print(spam[0:5] + spam[5:]) # addition concatenates strings
@@ -63,7 +63,7 @@ print(' ') # add an empty line
 # Here are some more examples of flow control:
 done_flag = False
 while not done_flag:
-    your_number_txt = input('Input an odd number greater than 6: ') # get some user input
+    your_number_txt = input('Input an even number greater than 6: ') # get some user input
     # input returns a string. turn it into an integer
     your_number = int(your_number_txt)
     if your_number > 6 and your_number % 2 == 0: # % is the modulus operator
