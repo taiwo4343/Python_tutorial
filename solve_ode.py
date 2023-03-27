@@ -1,7 +1,7 @@
 '''Example of solving an ODE with scipy'''
 
 import numpy as np
-from scipy.integrate import ode
+from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
 
 def logistic_eqn(t, x, params):
@@ -22,39 +22,34 @@ def solve_logistic(x0, tstart, tstop, params):
     '''Solve the logistic equation with given initial condition, start time,
     end time, and parameters.'''
 
-    x_sol = [x0] # create a list to hold the solution. it starts with the IC
-    time = [tstart] # create a list to hold the times which correspond to the solution points
+    y0 = np.array([x0]) # initila condition must be given as an array
 
-    dt = 0.1 # record solutions at this time interval
+    tmesh = np.linspace(tstart,tstop,1000) # force recorded solutions at these points.
+    # this can be passed into the t_eval argument of solve_ivp.
 
-    ### setup solver ###
-    # We will use a "Dormand-Prince" numerical solver, which is a 4th-order 
-    #   Runge-Kutta method with variable stepsize. It's basically ODE45.
-    solver = ode(logistic_eqn).set_integrator('dopri5')
-    # Pass in the IC, initial time, and parameter dictionary to the solver object
-    solver.set_initial_value(x0, tstart).set_f_params(params)
-    # Solve. This involves a loop in which we integrate to each new time we want
-    #   to record, and then record it.
-    # The nice thing about this approach is that we can do complicated things, like
-    #   test properties of the solution as it is coming out and take action accordingly.
-    while solver.successful and solver.t < tstop:
-        solver.integrate(solver.t+dt) #integrate up to next time we want to record
-        # record solution at that time
-        x_sol.append(solver.y)
-        time.append(solver.t)
+    ### call the solver ###
+    # The default solver is RK45 which is an explicit, variable step size Runge
+    #   Kutta solver of order 4(5). It's also known as "Dormand-Prince" and 
+    #   it's basically ODE45. Try it first unless you have a good reason not to.
+    # args passes arguments to all supplied functions. It must be a tuple.
+    solution = solve_ivp(logistic_eqn, t_span=[tstart, tstop], y0=y0, args=(params,))
 
-    # After we've finished, return all the values for plotting, recording, etc.
-    return (x_sol, time)
+    # After we've finished, return the solution object.
+    return solution
 
 
 
-def plot_solution(x, time):
+def plot_solution(sol):
     '''Plot a solution set and either show it or return the plot object'''
+    time = sol.t
+    x = sol.y[0,:] # only one eqn., so has shape (1, timepoints)
     plt.plot(time, x, label='logistic eqn')
     plt.xlabel('time')
     plt.legend()
     plt.tight_layout()
     plt.show()
+
+
 
 # this if statement is a bit of boilerplate that says:
 #   "If this script is run from a command prompt, do the following"
@@ -71,5 +66,5 @@ if __name__ == "__main__":
     tstop = 60 # stop at time t=100
 
     # Run the solver
-    x, time = solve_logistic(x0, tstart, tstop, params)
-    plot_solution(x, time)
+    sol = solve_logistic(x0, tstart, tstop, params)
+    plot_solution(sol)
